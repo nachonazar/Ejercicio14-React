@@ -1,15 +1,21 @@
-import React from "react";
-import { Col, Row, Card, Button } from "react-bootstrap";
+import React, { useState } from "react";
+import { Col, Row, Card, Button, Container } from "react-bootstrap";
+import ModalReceta from "./ModalReceta";
 
 const BlogRecetas = () => {
+  const [mostrar, setMostrar] = useState(false);
+
   return (
-    <div>
-      <h1 className="text-center mt-4">Blog de recetas</h1>
+    <Container>
+      <div className="d-flex justify-content-between mt-4">
+        <h1>Lista de recetas</h1>
+        <Button onClick={() => setMostrar(true)}>Agregar</Button>
+      </div>
       <Row>
         <Col>
-          <Card className="mx-5 mt-4 d-flex flex-row">
+          <Card className="mt-2 d-flex flex-row">
             <Card className="img"></Card>
-            <Card.Body className="mx-5 text-start">
+            <Card.Body className="text-start">
               <Card.Title>Special title treatment</Card.Title>
               <Card.Text>
                 With supporting text below as a natural lead-in to additional
@@ -20,7 +26,11 @@ const BlogRecetas = () => {
           </Card>
         </Col>
       </Row>
-    </div>
+      <ModalReceta
+        mostrar={mostrar}
+        handleClose={() => setMostrar(false)}
+      ></ModalReceta>
+    </Container>
   );
 };
 
