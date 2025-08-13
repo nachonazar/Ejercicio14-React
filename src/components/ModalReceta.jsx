@@ -4,7 +4,10 @@ import { useForm } from "react-hook-form";
 import ListaRecetas from "./ListaRecetas";
 
 const ModalReceta = ({ mostrar, handleClose }) => {
-  const [recetas, setRecetas] = useState([]);
+  const recetasLocalstorage =
+    JSON.parse(localStorage.getItem("listaRecetas")) || [];
+
+  const [recetas, setRecetas] = useState(recetasLocalstorage);
 
   const {
     register,
@@ -22,7 +25,9 @@ const ModalReceta = ({ mostrar, handleClose }) => {
     handleClose();
   };
 
-  useEffect(() => {}, [recetas]);
+  useEffect(() => {
+    localStorage.setItem("listaRecetas", JSON.stringify(recetas));
+  }, [recetas]);
 
   return (
     <>
