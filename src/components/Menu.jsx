@@ -9,7 +9,7 @@ const Menu = () => {
         <Navbar.Toggle aria-controls="navbar-nav" />
         <Navbar.Collapse id="navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link>Nosotros</Nav.Link>
+            <Nav.Link>Administrar Recetas</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

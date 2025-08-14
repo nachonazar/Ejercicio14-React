@@ -25,6 +25,12 @@ const ModalReceta = ({ mostrar, handleClose }) => {
     handleClose();
   };
 
+  const borrarRecetas = (receta) => {
+    const recetasFiltradas = recetas.filter((item) => item !== receta);
+    //actualizar el estado recetas
+    setRecetas(recetasFiltradas);
+  };
+
   useEffect(() => {
     localStorage.setItem("listaRecetas", JSON.stringify(recetas));
   }, [recetas]);
@@ -122,7 +128,7 @@ const ModalReceta = ({ mostrar, handleClose }) => {
           </Form>
         </Modal.Body>
       </Modal>
-      <ListaRecetas recetas={recetas}></ListaRecetas>
+      <ListaRecetas recetas={recetas} borrarRecetas={borrarRecetas}></ListaRecetas>
     </>
   );
 };
