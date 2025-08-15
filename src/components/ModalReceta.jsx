@@ -3,11 +3,14 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import ListaRecetas from "./ListaRecetas";
 
-const ModalReceta = ({ mostrar, handleClose }) => {
+const ModalReceta = ({ mostrar, handleClose, abrirModal }) => {
   const recetasLocalstorage =
     JSON.parse(localStorage.getItem("listaRecetas")) || [];
 
   const [recetas, setRecetas] = useState(recetasLocalstorage);
+
+  const [edicion, setEdicion] = useState(false);
+  const [indiceEditar, setIndiceEditar] = useState(null);
 
   const {
     register,
@@ -17,10 +20,15 @@ const ModalReceta = ({ mostrar, handleClose }) => {
   } = useForm();
 
   const agregarRecetas = (data) => {
-    //tomar la receta que esta en el state recetas y guardarlo en el state recetas (array)
-    //recetas.push(color)
-    setRecetas([...recetas, data]);
-    //limpiar el formulario
+    if (edicion) {
+      const nuevas = [...recetas];
+      nuevas[indiceEditar] = data;
+      setRecetas(nuevas);
+      setEdicion(false);
+      setIndiceEditar(null);
+    } else {
+      setRecetas([...recetas, data]);
+    }
     reset();
     handleClose();
   };
@@ -31,15 +39,46 @@ const ModalReceta = ({ mostrar, handleClose }) => {
     setRecetas(recetasFiltradas);
   };
 
+  const editarRecetas = (indice) => {
+    reset(recetas[indice]);
+    setEdicion(true);
+    setIndiceEditar(indice);
+    abrirModal();
+  };
+
   useEffect(() => {
     localStorage.setItem("listaRecetas", JSON.stringify(recetas));
   }, [recetas]);
 
+  useEffect(() => {
+    if (mostrar) {
+      if (!edicion) {
+        reset({
+          nombre: "",
+          categoria: "",
+          imagen: "",
+          descripcion: "",
+        });
+        setIndiceEditar(null);
+      }
+    } else {
+      reset({
+        nombre: "",
+        categoria: "",
+        imagen: "",
+        descripcion: "",
+      });
+      setEdicion(false);
+      setIndiceEditar(null);
+    }
+  }, [mostrar, edicion, reset]);
   return (
     <>
       <Modal show={mostrar} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Agregar Receta</Modal.Title>
+          <Modal.Title>
+            {edicion ? "Editar Receta" : "Agregar Receta"}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit(agregarRecetas)}>
@@ -128,7 +167,11 @@ const ModalReceta = ({ mostrar, handleClose }) => {
           </Form>
         </Modal.Body>
       </Modal>
-      <ListaRecetas recetas={recetas} borrarRecetas={borrarRecetas}></ListaRecetas>
+      <ListaRecetas
+        recetas={recetas}
+        borrarRecetas={borrarRecetas}
+        editarRecetas={editarRecetas}
+      ></ListaRecetas>
     </>
   );
 };

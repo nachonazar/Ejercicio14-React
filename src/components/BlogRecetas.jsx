@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Col, Row, Card, Button, Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import ModalReceta from "./ModalReceta";
 
 const BlogRecetas = () => {
@@ -14,6 +14,7 @@ const BlogRecetas = () => {
       <ModalReceta
         mostrar={mostrar}
         handleClose={() => setMostrar(false)}
+        abrirModal={() => setMostrar(true)}
       ></ModalReceta>
     </Container>
   );
