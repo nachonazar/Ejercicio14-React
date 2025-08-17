@@ -171,6 +171,7 @@ const ModalReceta = ({ mostrar, handleClose, abrirModal }) => {
         recetas={recetas}
         borrarRecetas={borrarRecetas}
         editarRecetas={editarRecetas}
+        admin={true}
       ></ListaRecetas>
     </>
   );
