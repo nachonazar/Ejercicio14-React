@@ -8,7 +8,7 @@ const BlogRecetas = () => {
   return (
     <Container>
       <div className="d-flex justify-content-between mt-4">
-        <h1>Lista de recetas</h1>
+        <h1>Administrar Recetas</h1>
         <Button onClick={() => setMostrar(true)}>Agregar</Button>
       </div>
       <ModalReceta
