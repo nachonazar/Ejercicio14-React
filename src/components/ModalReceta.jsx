@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import ListaRecetas from "./ListaRecetas";
+import { crearReceta, leerRecetas } from "../helpers/queries.js";
 
 const ModalReceta = ({ mostrar, handleClose, abrirModal }) => {
   const recetasLocalstorage =
@@ -12,6 +13,22 @@ const ModalReceta = ({ mostrar, handleClose, abrirModal }) => {
   const [edicion, setEdicion] = useState(false);
   const [indiceEditar, setIndiceEditar] = useState(null);
 
+  const [listaRecetas, setListaRecetas] = useState([]);
+
+  useEffect(() => {
+    obtenerRecetas();
+  }, []);
+
+  const obtenerRecetas = async () => {
+    const respuesta = await leerRecetas();
+    if (respuesta.status === 200) {
+      const datos = await respuesta.json();
+      setListaRecetas(datos);
+    } else {
+      console.info("Ocurrio un error al buscar las recetas");
+    }
+  };
+
   const {
     register,
     handleSubmit,
@@ -19,16 +36,15 @@ const ModalReceta = ({ mostrar, handleClose, abrirModal }) => {
     formState: { errors },
   } = useForm();
 
-  const agregarRecetas = (data) => {
-    if (edicion) {
-      const nuevas = [...recetas];
-      nuevas[indiceEditar] = data;
-      setRecetas(nuevas);
-      setEdicion(false);
-      setIndiceEditar(null);
+  const agregarRecetas = async (data) => {
+    const respuesta = await crearReceta(data);
+
+    if (respuesta.status === 201) {
+      obtenerRecetas();
     } else {
-      setRecetas([...recetas, data]);
+      console.error(errors);
     }
+
     reset();
     handleClose();
   };
@@ -168,7 +184,7 @@ const ModalReceta = ({ mostrar, handleClose, abrirModal }) => {
         </Modal.Body>
       </Modal>
       <ListaRecetas
-        recetas={recetas}
+        recetas={listaRecetas}
         borrarRecetas={borrarRecetas}
         editarRecetas={editarRecetas}
         admin={true}

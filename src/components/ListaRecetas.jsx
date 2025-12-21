@@ -9,13 +9,12 @@ const ListaRecetas = ({
 }) => {
   return (
     <div className="mt-4">
-      {recetas.map((item, indice) => (
+      {recetas.map((item) => (
         <ItemReceta
-          key={indice}
+          key={item._id}
           receta={item}
           borrarRecetas={borrarRecetas}
           editarRecetas={editarRecetas}
-          indice={indice}
           admin={admin}
         ></ItemReceta>
       ))}
