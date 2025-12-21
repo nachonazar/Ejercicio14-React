@@ -5,7 +5,9 @@ import ListaRecetas from "./ListaRecetas";
 import {
   borrarRecetaPorId,
   crearReceta,
+  editarReceta,
   leerRecetas,
+  obtenerRecetaPorId,
 } from "../helpers/queries.js";
 
 const ModalReceta = ({ mostrar, handleClose, abrirModal }) => {
@@ -41,17 +43,27 @@ const ModalReceta = ({ mostrar, handleClose, abrirModal }) => {
   } = useForm();
 
   const agregarRecetas = async (data) => {
-    const respuesta = await crearReceta(data);
+  let respuesta;
 
-    if (respuesta.status === 201) {
-      obtenerRecetas();
-    } else {
-      console.error(errors);
-    }
+  if (edicion) {
+    respuesta = await editarReceta(data, indiceEditar._id);
+  } else {
+    respuesta = await crearReceta(data);
+  }
 
-    reset();
-    handleClose();
-  };
+  if (respuesta.status === 200 || respuesta.status === 201) {
+    obtenerRecetas();
+  } else {
+    console.error(errors);
+  }
+
+  reset();
+  setEdicion(false);
+  setIndiceEditar(null);
+  handleClose();
+};
+
+
 
   const borrarRecetas = async (receta) => {
     const respuesta = await borrarRecetaPorId(receta._id);
@@ -62,11 +74,19 @@ const ModalReceta = ({ mostrar, handleClose, abrirModal }) => {
     }
   };
 
-  const editarRecetas = (indice) => {
-    reset(recetas[indice]);
-    setEdicion(true);
-    setIndiceEditar(indice);
-    abrirModal();
+  const editarRecetas = async (receta) => {
+    const respuesta = await obtenerRecetaPorId(receta._id);
+
+    if (respuesta.status === 200) {
+      const recetaBuscada = await respuesta.json();
+
+      reset(recetaBuscada);
+      setEdicion(true);
+      setIndiceEditar(recetaBuscada);
+      abrirModal();
+    } else {
+      console.error(errors);
+    }
   };
 
   useEffect(() => {

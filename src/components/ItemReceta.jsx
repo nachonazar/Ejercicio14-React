@@ -5,7 +5,6 @@ const ItemReceta = ({
   receta,
   borrarRecetas,
   editarRecetas,
-  indice,
   admin = true,
 }) => {
   return (
@@ -16,7 +15,7 @@ const ItemReceta = ({
         <Card.Text>{receta.descripcion}</Card.Text>
         {admin && (
           <div className="d-flex justify-content-end gap-2">
-            <Button variant="primary" onClick={() => editarRecetas(indice)}>
+            <Button variant="primary" onClick={() => editarRecetas(receta)}>
               Editar
             </Button>
             <Button variant="danger" onClick={() => borrarRecetas(receta)}>
