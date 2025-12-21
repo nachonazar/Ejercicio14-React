@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import ListaRecetas from "./ListaRecetas";
-import { crearReceta, leerRecetas } from "../helpers/queries.js";
+import {
+  borrarRecetaPorId,
+  crearReceta,
+  leerRecetas,
+} from "../helpers/queries.js";
 
 const ModalReceta = ({ mostrar, handleClose, abrirModal }) => {
   const recetasLocalstorage =
@@ -49,10 +53,13 @@ const ModalReceta = ({ mostrar, handleClose, abrirModal }) => {
     handleClose();
   };
 
-  const borrarRecetas = (receta) => {
-    const recetasFiltradas = recetas.filter((item) => item !== receta);
-    //actualizar el estado recetas
-    setRecetas(recetasFiltradas);
+  const borrarRecetas = async (receta) => {
+    const respuesta = await borrarRecetaPorId(receta._id);
+    if (respuesta.status === 200) {
+      obtenerRecetas();
+    } else {
+      console.error(errors);
+    }
   };
 
   const editarRecetas = (indice) => {
